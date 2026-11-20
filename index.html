@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Who’s more likely? A quick test of gut instinct</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #e8edf4;
+        --surface: #f7f9fc;
+        --ink: #17203a;
+        --muted: #58627e;
+        --line: #c9d1df;
+        --gut: #d9466f;
+        --gut-soft: #f6d9e2;
+        --fact: #13806a;
+        --fact-soft: #d3eee6;
+        --mark: #f2be2e;
+        --display:
+          "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui,
+          sans-serif;
+        --text: "Newsreader", Georgia, "Times New Roman", serif;
+        color-scheme: light;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #111728;
+          --surface: #1a2238;
+          --ink: #e9edf6;
+          --muted: #9aa4bf;
+          --line: #2e3956;
+          --gut: #f0739a;
+          --gut-soft: #3d2232;
+          --fact: #4cc7a6;
+          --fact-soft: #173a35;
+          --mark: #f2be2e;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #111728;
+        --surface: #1a2238;
+        --ink: #e9edf6;
+        --muted: #9aa4bf;
+        --line: #2e3956;
+        --gut: #f0739a;
+        --gut-soft: #3d2232;
+        --fact: #4cc7a6;
+        --fact-soft: #173a35;
+        --mark: #f2be2e;
+        color-scheme: dark;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--text);
+        font-size: 1.125rem;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 3px solid var(--mark);
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+      .wrap {
+        max-width: 42rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.25rem 4rem;
+      }
+      .screen[hidden] {
+        display: none;
+      }
+
+      /* Intro */
+      .intro h1 {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: clamp(3rem, 11vw, 5.75rem);
+        line-height: 0.92;
+        letter-spacing: -0.035em;
+        margin: 1.5rem 0 1.25rem;
+      }
+      .intro .lede {
+        font-size: 1.25rem;
+        max-width: 34rem;
+        margin: 0 0 2rem;
+      }
+      .split {
+        display: flex;
+        gap: 0.6rem;
+        margin: 2.5rem 0 2.25rem;
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      .split span {
+        padding: 0.35rem 0.8rem;
+        border-radius: 999px;
+      }
+      .split .g {
+        background: var(--gut-soft);
+        color: var(--gut);
+      }
+      .split .f {
+        background: var(--fact-soft);
+        color: var(--fact);
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 1.1rem;
+        background: var(--ink);
+        color: var(--bg);
+        border: 0;
+        border-radius: 14px;
+        padding: 0.9rem 1.6rem;
+        cursor: pointer;
+      }
+      .btn:hover {
+        filter: brightness(1.15);
+      }
+      .note {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-top: 1rem;
+      }
+
+      /* Question */
+      .progress {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 4px;
+        margin-bottom: 0.6rem;
+      }
+      .progress i {
+        height: 5px;
+        border-radius: 3px;
+        background: var(--line);
+      }
+      .progress i.done {
+        background: var(--ink);
+      }
+      .progress i.now {
+        background: var(--mark);
+      }
+      .counter {
+        font-family: var(--display);
+        color: var(--muted);
+        font-size: 0.95rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .linkbtn {
+        background: none;
+        border: 0;
+        padding: 0.25rem 0;
+        color: var(--muted);
+        cursor: pointer;
+        font-family: var(--display);
+        font-size: 0.95rem;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .linkbtn[disabled] {
+        visibility: hidden;
+      }
+      .name {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: clamp(3.5rem, 14vw, 6.5rem);
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+        margin: 2rem 0 1rem;
+      }
+      .sketch {
+        font-size: clamp(1.35rem, 4.2vw, 1.75rem);
+        line-height: 1.45;
+        margin: 2.25rem 0 2rem;
+        max-width: 38rem;
+      }
+      .ask {
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 0 0 0.9rem;
+      }
+      .options {
+        display: grid;
+        gap: 0.75rem;
+      }
+      .opt {
+        display: flex;
+        gap: 0.9rem;
+        align-items: baseline;
+        text-align: left;
+        width: 100%;
+        background: var(--surface);
+        border: 2px solid var(--line);
+        border-radius: 16px;
+        padding: 1.05rem 1.2rem;
+        cursor: pointer;
+        font-family: var(--text);
+        font-size: 1.2rem;
+        line-height: 1.35;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+      }
+      .opt b {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1rem;
+        color: var(--muted);
+        min-width: 1.1rem;
+      }
+      .opt:hover {
+        border-color: var(--ink);
+      }
+      .opt.picked {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .opt.picked b {
+        color: var(--mark);
+      }
+
+      /* Results */
+      .score {
+        font-family: var(--display);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 0.9;
+        font-size: clamp(5rem, 22vw, 10rem);
+        margin: 1rem 0 0.25rem;
+      }
+      .score small {
+        font-size: 0.32em;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--muted);
+      }
+      .verdict {
+        font-size: 1.35rem;
+        margin: 0 0 1.75rem;
+        max-width: 34rem;
+      }
+      .tally {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 3rem;
+      }
+      .tally div {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 1rem 1.1rem;
+      }
+      .tally strong {
+        display: block;
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 2.2rem;
+        line-height: 1.1;
+      }
+      .tally span {
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.35;
+        display: block;
+      }
+      h2 {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.9rem;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        margin: 3rem 0 1.25rem;
+      }
+      .review {
+        border-top: 1px solid var(--line);
+        padding: 1.75rem 0;
+      }
+      .review h3 {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.6rem;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.5rem;
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .tag {
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0;
+        padding: 0.2rem 0.65rem;
+        border-radius: 999px;
+      }
+      .tag.right {
+        background: var(--fact-soft);
+        color: var(--fact);
+      }
+      .tag.wrong {
+        background: var(--gut-soft);
+        color: var(--gut);
+      }
+      .picks {
+        font-size: 1.05rem;
+        margin: 0 0 0.75rem;
+        color: var(--muted);
+      }
+      .picks em {
+        color: var(--ink);
+        font-style: normal;
+        font-weight: 500;
+      }
+      .review p {
+        margin: 0.5rem 0;
+      }
+      .fact {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 1.1rem 1.2rem;
+        margin-top: 1rem;
+      }
+      .fact p {
+        margin: 0 0 0.8rem;
+        font-size: 1.05rem;
+      }
+      .rowlabel {
+        font-family: var(--display);
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0.6rem 0 0.3rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .rowlabel span:last-child {
+        color: var(--muted);
+        font-weight: 400;
+        text-align: right;
+      }
+      .dots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+      }
+      .dots i {
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        display: block;
+      }
+      .dots.g i {
+        background: var(--gut);
+      }
+      .dots.f i {
+        background: var(--fact);
+      }
+      .caption {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-top: 0.6rem;
+      }
+      .venn {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+        display: block;
+        margin: 0.25rem 0;
+      }
+      .why p {
+        max-width: 38rem;
+      }
+      .why h3 {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.25rem;
+        margin: 1.75rem 0 0.3rem;
+      }
+      .sources {
+        font-size: 0.95rem;
+        color: var(--muted);
+        padding-left: 1.1rem;
+      }
+      .sources li {
+        margin: 0.35rem 0;
+      }
+      .sources a {
+        color: var(--ink);
+      }
+      .again {
+        margin-top: 2.5rem;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .screen.enter {
+          animation: rise 0.35s ease-out;
+        }
+        @keyframes rise {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: none;
+          }
+        }
+      }
+      @media (max-width: 480px) {
+        .tally {
+          grid-template-columns: 1fr;
+        }
+        .dots i {
+          width: 7px;
+          height: 7px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="screen intro" id="intro">
+        <div class="split" aria-hidden="true">
+          <span class="g">gut feeling</span><span class="f">the numbers</span>
+        </div>
+        <h1>Who’s more likely?</h1>
+        <p class="lede">
+          Ten people, a few details about each, two possible answers. Go with
+          your first instinct. Your score, and the real UK numbers behind each
+          answer, come at the end.
+        </p>
+        <button class="btn" id="startBtn">Start the test</button>
+        <p class="note">
+          About three minutes. Nothing you answer is saved or sent anywhere.
+        </p>
+      </section>
+
+      <section class="screen" id="quiz" hidden>
+        <div class="progress" id="progress" aria-hidden="true"></div>
+        <div class="counter">
+          <span id="counter">1 of 10</span>
+          <button class="linkbtn" id="backBtn">Previous question</button>
+        </div>
+        <p class="sketch" id="qSketch"></p>
+        <p class="ask" id="qAsk"></p>
+        <div class="options" id="qOptions"></div>
+      </section>
+
+      <section class="screen" id="results" hidden>
+        <div id="resultsTop"></div>
+        <h2>Question by question</h2>
+        <div id="reviewList"></div>
+
+        <section class="why">
+          <h2>Why the gut gets it wrong</h2>
+          <h3>Representativeness</h3>
+          <p>
+            Daniel Kahneman and Amos Tversky showed in the 1970s that people
+            judge probability by asking “how much does this person look like my
+            picture of a librarian?” instead of “how many librarians are there?”
+            Similarity feels like evidence. It usually isn’t enough.
+          </p>
+          <h3>Base-rate neglect</h3>
+          <p>
+            The size of each group (the base rate) is the most important number
+            in every one of the first-type questions, and the description makes
+            you forget it. A trait that fits 1 in 20 farmers still points to a
+            farmer when farmers outnumber librarians seven to one.
+          </p>
+          <h3>The conjunction fallacy</h3>
+          <p>
+            In Tversky and Kahneman’s 1983 study, about 85% of participants
+            ranked “feminist bank teller” as more likely than “bank teller” for
+            Linda, which is impossible. Adding a detail that fits the story
+            makes it feel more plausible, while making it strictly less
+            probable.
+          </p>
+        </section>
+
+        <h2>Sources</h2>
+        <ul class="sources" id="sources"></ul>
+        <p class="note">
+          Figures are rounded and come from different years (2023 to 2026).
+          Several compare occupations from different surveys, so treat the
+          ratios as approximate. The point stands even if the numbers are off by
+          a factor of two.
+        </p>
+
+        <button class="btn again" id="againBtn">Take the test again</button>
+      </section>
+    </main>
+
+    <script>
+      const SOURCES = {
+        rcvs: {
+          t: "Royal College of Veterinary Surgeons, RCVS Facts 2024",
+          u: "https://www.rcvs.org.uk/news-and-views/publications/rcvs-facts-2024/rcvs-facts-2024f.pdf",
+        },
+        nmc: {
+          t: "Nursing and Midwifery Council, UK register mid-year update (September 2025)",
+          u: "https://www.nmc.org.uk/news/news-and-updates/sharp-drop-in-international-recruitment-slows-overall-growth-of-uk-register",
+        },
+        defra: {
+          t: "Defra, Farming evidence: key statistics (2024 data)",
+          u: "https://gov.uk/government/publications/farming-evidence-pack-a-high-level-overview-of-the-uk-agricultural-industry/farming-evidence-key-statistics-accessible-version",
+        },
+        libs: {
+          t: "ONS via Statista, librarians and related professionals in the UK (2020)",
+          u: "https://statista.com/statistics/319788/number-of-librarians-and-related-professionals-in-the-uk",
+        },
+        dft: {
+          t: "Department for Transport, Road freight statistics 2024",
+          u: "https://www.gov.uk/government/statistics/road-freight-statistics-2024/overview-of-the-road-freight-sector-2024",
+        },
+        cucd: {
+          t: "Council of University Classical Departments, Classics at UK Universities 2024–25",
+          u: "https://cucd.blogs.sas.ac.uk/files/2025/09/CUCD-Bulletin-2025.08-Statistics-2024-25.pdf",
+        },
+        fifa: {
+          t: "FIFA Professional Football Report 2023",
+          u: "https://inside.fifa.com/en/news/fifa-publishes-professional-football-report-2023",
+        },
+        frc: {
+          t: "Financial Reporting Council, Key Facts and Trends in the Accountancy Profession (2026 report, via The Accountant)",
+          u: "https://www.theaccountant-online.com/?p=30390",
+        },
+        yoga: {
+          t: "Nalbant et al., Characteristics of yoga providers in the UK (University of Nottingham)",
+          u: "https://nottingham-repository.worktribe.com/output/7413277/characteristics-of-yoga-providers-and-their-sessions-and-attendees-in-the-uk-a-cross-sectional-survey",
+        },
+        occ: {
+          t: "Careersmart, UK employment by occupation 2024 (ONS-based)",
+          u: "https://careersmart.org.uk/node/654",
+        },
+        dfe: {
+          t: "Department for Education, School workforce in England 2025/26",
+          u: "https://explore-education-statistics.service.gov.uk/find-statistics/school-workforce-in-england/2025",
+        },
+        space: {
+          t: "AeroCorner, How many people have been to space? (November 2026 count)",
+          u: "https://aerocorner.com/blog/how-many-people-have-been-to-space/",
+        },
+      };
+
+      const Q = [
+        {
+          name: "Steve",
+          type: "base",
+          sketch:
+            "Steve is very shy and withdrawn, always helpful but not very interested in people or the real world. He’s meek and tidy, and loves order, structure and detail.",
+          ask: "Is he more likely a librarian or a farmer?",
+          opts: ["A librarian", "A farmer"],
+          correct: 1,
+          stereo: 0,
+          why: "Steve sounds like a stereotypical librarian, but there are far more farmers than librarians. Even if only a small share of farmers are shy and tidy, they still outnumber the librarians who fit the description.",
+          fact: "In <i>Thinking, Fast and Slow</i>, Kahneman points out that in the United States there are more than 20 male farmers for every male librarian. Even if only 1 in 10 farmers fit Steve’s description, shy and tidy farmers would still outnumber all the librarians two to one.",
+          small: { label: "Male librarians (US)", n: 1, show: "1" },
+          big: { label: "Male farmers (US)", n: 20, show: "20+" },
+          caption:
+            "The ratio from Kahneman’s example: for every male librarian, more than 20 male farmers.",
+          src: [],
+        },
+        {
+          name: "Linda",
+          type: "conj",
+          sketch:
+            "Linda is 31, single, outspoken and very bright. She studied philosophy, cared deeply about discrimination and social justice as a student, and took part in anti-nuclear protests.",
+          ask: "Which is more likely?",
+          opts: [
+            "She’s a bank teller",
+            "She’s a bank teller who is active in the feminist movement",
+          ],
+          correct: 0,
+          stereo: 1,
+          why: "Option (b) matches her personality, so most people pick it. But every feminist bank teller is also a bank teller, so (b) can never be more likely than (a). This is the famous conjunction fallacy from Kahneman and Tversky’s research.",
+          fact: "In the original 1983 experiment, around 85% of participants picked the feminist bank teller.",
+          outer: "Bank tellers",
+          inner: "Feminist bank tellers",
+          src: [],
+        },
+        {
+          name: "Tolu",
+          type: "base",
+          sketch:
+            "Tolu is quiet and bookish, quotes Latin poetry, and spends weekends in museums.",
+          ask: "Is he more likely a classics professor or a lorry driver?",
+          opts: ["A classics professor", "A lorry driver"],
+          correct: 1,
+          stereo: 0,
+          why: "There are hundreds of lorry drivers for every classics professor. Even if only a tiny share of drivers are bookish, they still outnumber all the professors put together.",
+          fact: "The UK had about 280,000 HGV drivers in 2024. UK university classics departments employ around 560 staff in total, and only about 137 of them are professors. That’s roughly 2,000 lorry drivers for every classics professor.",
+          small: { label: "Classics professors", n: 137 },
+          big: { label: "HGV drivers", n: 280000 },
+          src: ["dft", "cucd"],
+        },
+        {
+          name: "Kemi",
+          type: "base",
+          sketch:
+            "Kemi lives in gym clothes, meal-preps on Sundays, and talks about protein macros.",
+          ask: "Is she more likely a professional athlete or an office worker?",
+          opts: ["A professional athlete", "An office worker"],
+          correct: 1,
+          stereo: 0,
+          why: "Professional athletes are extremely rare, while office workers number in the millions. Plenty of office workers are gym fanatics, and there are simply far more of them.",
+          fact: "Even the UK’s biggest professional sport is tiny: England has about 5,600 professional male footballers. Around 33.6 million people work in the UK, and millions of them sit at desks.",
+          small: { label: "Pro footballers in England", n: 5582 },
+          big: { label: "Everyone in work in the UK", n: 33600000 },
+          src: ["fifa", "defra"],
+        },
+        {
+          name: "Ada",
+          type: "base",
+          sketch:
+            "Ada has three rescue dogs, volunteers at an animal shelter, and watches every wildlife documentary she can find.",
+          ask: "Is she more likely a vet or a nurse?",
+          opts: ["A vet", "A nurse"],
+          correct: 1,
+          stereo: 0,
+          why: "Ada sounds like a vet, but there are far more nurses than vets in the UK. Only a small share of nurses need to be animal lovers to outnumber every vet in the country.",
+          fact: "The UK has about 794,000 registered nurses, against about 30,000 practising vets. That’s roughly 26 nurses for every vet.",
+          small: { label: "Practising vets", n: 30138 },
+          big: { label: "Registered nurses", n: 793694 },
+          src: ["rcvs", "nmc"],
+        },
+        {
+          name: "Jack",
+          type: "base",
+          sketch: "Jack has tattoos and long hair, and plays guitar.",
+          ask: "Is he more likely a rock musician or an IT support worker?",
+          opts: ["A rock musician", "An IT support worker"],
+          correct: 1,
+          stereo: 0,
+          why: "Very few people make a living as rock musicians. IT support is a huge field, and lots of people in it play guitar as a hobby.",
+          fact: "The UK has about 110,000 IT user support technicians, against about 63,000 professional musicians of every kind: classical, session, church, wedding bands and music teachers included. Rock musicians are only a slice of that second group.",
+          small: { label: "All professional musicians", n: 63039 },
+          big: { label: "IT user support technicians", n: 110056 },
+          src: ["occ"],
+        },
+        {
+          name: "Femi",
+          type: "base",
+          sketch:
+            "Femi owns a telescope, knows every constellation, and reads about space.",
+          ask: "Is he more likely an astronaut or a schoolteacher?",
+          opts: ["An astronaut", "A schoolteacher"],
+          correct: 1,
+          stereo: 0,
+          why: "Only a few hundred people have ever been astronauts, while there are millions of teachers. Space-loving teachers vastly outnumber astronauts.",
+          fact: "Only 746 people in all of history have flown above 100 km, and only a handful of them were British. England alone has about 512,000 schoolteachers today.",
+          small: { label: "Everyone who has ever been to space", n: 746 },
+          big: { label: "Teachers in England", n: 512000 },
+          src: ["space", "dfe"],
+        },
+        {
+          name: "Bola",
+          type: "conj",
+          sketch: "Bola is 29, builds apps for fun, and reads tech news.",
+          ask: "Which is more likely?",
+          opts: [
+            "She’s a software developer",
+            "She’s a software developer who runs her own startup",
+          ],
+          correct: 0,
+          stereo: 1,
+          why: "Every developer who runs a startup is also a developer, so (b) is a smaller group inside (a). Adding a detail can only make something less likely, never more.",
+          fact: "Whatever the real numbers are, the inner circle can never be bigger than the outer one.",
+          outer: "Software developers",
+          inner: "…who run a startup",
+          src: [],
+        },
+        {
+          name: "Emma",
+          type: "conj",
+          sketch:
+            "Emma is calm and caring, studied biology, and loves children.",
+          ask: "Which is more likely?",
+          opts: [
+            "She works in healthcare",
+            "She works in healthcare and volunteers at a children’s charity",
+          ],
+          correct: 0,
+          stereo: 1,
+          why: "Option (b) feels like a better fit, but it requires two things to be true instead of one. Anyone in group (b) is automatically in group (a) as well.",
+          fact: "Two conditions together are always at most as likely as either one alone.",
+          outer: "Healthcare workers",
+          inner: "…who also volunteer",
+          src: [],
+        },
+        {
+          name: "Tom",
+          type: "conj",
+          sketch:
+            "Tom is loud, competitive, and never misses a football match.",
+          ask: "Which is more likely?",
+          opts: [
+            "He’s a bank manager",
+            "He’s a bank manager who plays Sunday league football",
+          ],
+          correct: 0,
+          stereo: 1,
+          why: "Same trap again: the extra detail matches his personality, which makes it tempting. But two conditions together are always less likely than one of them on its own.",
+          fact: "The more vivid the story, the more convincing it feels, and the less likely it actually is.",
+          outer: "Bank managers",
+          inner: "…who play on Sundays",
+          src: [],
+        },
+      ];
+
+      const $ = (id) => document.getElementById(id);
+      let idx = 0;
+      let answers = new Array(Q.length).fill(null);
+      let advancing = false;
+
+      function show(id) {
+        for (const s of document.querySelectorAll(".screen"))
+          s.hidden = s.id !== id;
+        const el = $(id);
+        el.classList.remove("enter");
+        void el.offsetWidth;
+        el.classList.add("enter");
+        window.scrollTo(0, 0);
+      }
+
+      function renderQuestion() {
+        const q = Q[idx];
+        $("progress").innerHTML = Q.map(
+          (_, i) =>
+            `<i class="${i < idx ? "done" : i === idx ? "now" : ""}"></i>`,
+        ).join("");
+        $("counter").textContent = `${idx + 1} of ${Q.length}`;
+        $("backBtn").disabled = idx === 0;
+        $("qSketch").textContent = q.sketch;
+        $("qAsk").textContent = q.ask;
+        const box = $("qOptions");
+        box.innerHTML = "";
+        q.opts.forEach((o, i) => {
+          const b = document.createElement("button");
+          b.className = "opt" + (answers[idx] === i ? " picked" : "");
+          b.innerHTML = `<b>${"ab"[i]}</b><span></span>`;
+          b.querySelector("span").textContent = o;
+          b.addEventListener("click", () => pick(i, b));
+          box.appendChild(b);
+        });
+      }
+
+      function pick(i, btn) {
+        if (advancing) return;
+        advancing = true;
+        answers[idx] = i;
+        for (const b of $("qOptions").children) b.classList.remove("picked");
+        btn.classList.add("picked");
+        setTimeout(() => {
+          advancing = false;
+          if (idx < Q.length - 1) {
+            idx++;
+            renderQuestion();
+            show("quiz");
+          } else renderResults();
+        }, 320);
+      }
+
+      function dots(n, cls) {
+        return `<div class="dots ${cls}" aria-hidden="true">${"<i></i>".repeat(n)}</div>`;
+      }
+      const fmt = (n) => n.toLocaleString("en-GB");
+
+      function ratioBlock(q) {
+        const r = q.big.n / q.small.n;
+        const smallCount = r < 5 ? 10 : 1;
+        const bigFull = Math.round(smallCount * r);
+        const CAP = 400;
+        const bigCount = Math.min(bigFull, CAP);
+        const per = Math.round(q.small.n / smallCount);
+        let cap = `Each square is about ${fmt(per)} people.`;
+        if (bigFull > CAP)
+          cap += ` The second row is cut off at ${CAP} squares; the full row would have about ${fmt(bigFull)}.`;
+        return `
+    <div class="rowlabel"><span>${q.small.label}</span><span>${q.small.show || fmt(q.small.n)}</span></div>
+    ${dots(smallCount, "g")}
+    <div class="rowlabel"><span>${q.big.label}</span><span>${q.big.show || fmt(q.big.n)}</span></div>
+    ${dots(bigCount, "f")}
+    <p class="caption">${q.caption || cap}</p>`;
+      }
+
+      function vennBlock(q) {
+        const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+        return `<svg class="venn" viewBox="0 0 320 200" role="img" aria-label="${esc(q.inner)} sit entirely inside ${esc(q.outer)}">
+    <circle cx="160" cy="100" r="95" fill="var(--fact-soft)" stroke="var(--fact)" stroke-width="2"/>
+    <circle cx="190" cy="125" r="42" fill="var(--gut-soft)" stroke="var(--gut)" stroke-width="2"/>
+    <text x="160" y="45" text-anchor="middle" font-family="Bricolage Grotesque, system-ui, sans-serif" font-weight="600" font-size="15" fill="var(--fact)">${esc(q.outer)}</text>
+    <text x="190" y="129" text-anchor="middle" font-family="Bricolage Grotesque, system-ui, sans-serif" font-weight="600" font-size="11" fill="var(--gut)">${esc(q.inner.length > 22 ? q.inner.slice(0, 21) + "…" : q.inner)}</text>
+  </svg>
+  <p class="caption">The smaller circle sits entirely inside the bigger one, so it can never hold more people.</p>`;
+      }
+
+      function renderResults() {
+        let score = 0,
+          baseRight = 0,
+          conjRight = 0,
+          stereoPicks = 0;
+        const baseTotal = Q.filter((q) => q.type === "base").length;
+        const conjTotal = Q.length - baseTotal;
+        Q.forEach((q, i) => {
+          if (answers[i] === q.correct) {
+            score++;
+            q.type === "base" ? baseRight++ : conjRight++;
+          }
+          if (answers[i] === q.stereo) stereoPicks++;
+        });
+
+        let verdict;
+        if (score >= 9)
+          verdict =
+            "You beat the stereotypes almost every time. You either think like a statistician or you’ve seen these puzzles before.";
+        else if (score >= 6)
+          verdict = `You resisted the stereotype more often than not, but your gut still won ${stereoPicks} time${stereoPicks === 1 ? "" : "s"}.`;
+        else if (score >= 3)
+          verdict = `Your gut picked the stereotype ${stereoPicks} times out of 10. That’s very normal, and it’s exactly what this test is designed to show.`;
+        else
+          verdict = `The stereotype won ${stereoPicks} times out of 10. Don’t worry: most people do the same, and the numbers below explain why.`;
+
+        $("resultsTop").innerHTML = `
+    <div class="split" aria-hidden="true"><span class="g">gut feeling</span><span class="f">the numbers</span></div>
+    <p class="score">${score}<small> / 10</small></p>
+    <p class="verdict">${verdict}</p>
+    <div class="tally">
+      <div><strong>${baseRight} / ${baseTotal}</strong><span>“Who is this person?” questions, where the size of each group matters most</span></div>
+      <div><strong>${conjRight} / ${conjTotal}</strong><span>“A or A-plus-a-detail?” questions, where the extra detail is the trap</span></div>
+    </div>`;
+
+        $("reviewList").innerHTML = Q.map((q, i) => {
+          const right = answers[i] === q.correct;
+          return `<article class="review">
+      <h3>${q.name} <span class="tag ${right ? "right" : "wrong"}">${right ? "You got it" : "Stereotype won"}</span></h3>
+      <p class="picks">You picked <em>${q.opts[answers[i]]}</em>. ${right ? "" : "The likelier answer is <em>" + q.opts[q.correct] + "</em>."}</p>
+      <p>${q.why}</p>
+      <div class="fact">
+        <p>${q.fact}</p>
+        ${q.type === "base" ? ratioBlock(q) : vennBlock(q)}
+      </div>
+    </article>`;
+        }).join("");
+
+        const used = [...new Set(Q.flatMap((q) => q.src))];
+        $("sources").innerHTML =
+          used
+            .map(
+              (k) =>
+                `<li><a href="${SOURCES[k].u}" target="_blank" rel="noopener">${SOURCES[k].t}</a></li>`,
+            )
+            .join("") +
+          `<li>Tversky, A. and Kahneman, D. (1983). Extensional versus intuitive reasoning: the conjunction fallacy in probability judgment. <i>Psychological Review</i>, 90(4).</li>` +
+          `<li>Kahneman, D. (2011). <i>Thinking, Fast and Slow</i>. Farrar, Straus and Giroux.</li>`;
+
+        show("results");
+      }
+
+      $("startBtn").addEventListener("click", () => {
+        idx = 0;
+        renderQuestion();
+        show("quiz");
+      });
+      $("backBtn").addEventListener("click", () => {
+        if (idx > 0) {
+          idx--;
+          renderQuestion();
+          show("quiz");
+        }
+      });
+      $("againBtn").addEventListener("click", () => {
+        answers = new Array(Q.length).fill(null);
+        idx = 0;
+        show("intro");
+      });
+      document.addEventListener("keydown", (e) => {
+        if ($("quiz").hidden) return;
+        const k = e.key.toLowerCase();
+        if (k === "a" || k === "1") $("qOptions").children[0]?.click();
+        if (k === "b" || k === "2") $("qOptions").children[1]?.click();
+      });
+    </script>
+  </body>
+</html>
